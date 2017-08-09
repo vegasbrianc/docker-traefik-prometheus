@@ -2,8 +2,8 @@ version: '3'
 
 services:
   traefik:
-    build: .
-    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    image: traefik
+    command: --web --docker --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker.domain=docker.localhost --logLevel=DEBUG
     networks:
       - prometheus
     ports:
@@ -11,8 +11,6 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    external_links:
-      - prometheus
 
 networks:
  prometheus: 
