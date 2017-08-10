@@ -3,7 +3,7 @@ version: '3'
 services:
   traefik:
     image: traefik
-    command: --web --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" -- docker --docker.domain=docker.localhost --logLevel=DEBUG
+    command: --web --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker --docker.domain=docker.localhost --logLevel=DEBUG
     networks:
       - prometheus
     ports:
