@@ -1,18 +1,51 @@
-version: '3'
+version: '3.7'
 
 services:
   traefik:
-    image: traefik
-    command: --web --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    image: traefik:v1.7-alpine
+    command:
+      - "--logLevel=DEBUG"
+      - "--api"
+      - "--metrics"
+      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
+      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
+      - "--entrypoints=Name:https Address::443 TLS"
+      - "--defaultentrypoints=http,https"
+      - "--docker"
+      - "--docker.swarmMode"
+      - "--docker.domain=traefik.local"
+      - "--docker.watch"
     networks:
-      - prometheus
-    ports:
-      - "80:80"
-      - "8080:8080"
+      - traefik
+      - inbound
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - target: 80
+        published: 80
+        mode: host
+      - target: 443
+        published: 443
+        mode: host
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: ingress
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
 
 networks:
- prometheus: 
-   external:
-     name: dockerprometheus_back-tier
+  traefik:
+    driver: overlay
+    name: traefik
+  inbound:
+    driver: overlay
+    name: inbound
