@@ -8,12 +8,12 @@ services:
       - "--api"
       - "--metrics"
       - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-      - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      - "--entrypoints=Name:https Address::443 TLS"
-      - "--defaultentrypoints=http,https"
+      # - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
+      # - "--entrypoints=Name:https Address::443 TLS"
+ #     - "--defaultentrypoints=http,https"
       - "--docker"
       - "--docker.swarmMode"
-      - "--docker.domain=traefik.local"
+      - "--docker.domain=docker.localhost"
       - "--docker.watch"
     networks:
       - traefik
@@ -41,6 +41,49 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - inbound
+      # - prometheus
+    restart: always
+    deploy:
+      labels:
+       - "traefik.frontend.rule=Host:prometheus.localhost"
+       - "traefik.port=9090"
+       - "traefik.docker.network=inbound"
+      placement:
+        constraints:
+        - node.role==manager
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./grafana/config.monitoring
+    networks:
+      - inbound
+    user: "104"
+    restart: always
+    deploy:
+     labels:
+      - "traefik.port=3000"
+      - "traefik.docker.network=inbound"
+      -  "traefik.frontend.rule=Host:grafana.localhost"
+     placement:
+        constraints:
+          - node.role == manager
 
 networks:
   traefik:
@@ -49,3 +92,10 @@ networks:
   inbound:
     driver: overlay
     name: inbound
+  prometheus:
+    driver: overlay
+    name: prometheus
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
