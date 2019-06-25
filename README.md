@@ -4,6 +4,8 @@ This Repo helps you get started with monitoring [Traefik](https://traefik.io/) t
 
 Before we can begin ensure you have Docker installed with Docker Swarm enabled. If you are using Docker for Desktop Mac or Windows you already have Swarm enabled. For all others please follow the [Swarm setup guide](https://docs.docker.com/engine/swarm/swarm-mode/).
 
+The presentation from this demo is also included in the Repo - [56k_Cloud_Traefik_Monitoring.pdf](https://github.com/vegasbrianc/docker-traefik-prometheus/blob/master/56k_Cloud_Traefik_Monitoring.pdf) 
+
 # Goals of the Traefik Monitoring Repo:
 
 * Provision a Traefik Stack with Prometheus metrics enabled
