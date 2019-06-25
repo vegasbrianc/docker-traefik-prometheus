@@ -8,9 +8,6 @@ services:
       - "--api"
       - "--metrics"
       - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-      # - "--entrypoints=Name:http Address::80 Redirect.EntryPoint:https"
-      # - "--entrypoints=Name:https Address::443 TLS"
- #     - "--defaultentrypoints=http,https"
       - "--docker"
       - "--docker.swarmMode"
       - "--docker.domain=docker.localhost"
@@ -53,8 +50,6 @@ services:
       - '--web.console.templates=/usr/share/prometheus/consoles'
     networks:
       - inbound
-      # - prometheus
-    restart: always
     deploy:
       labels:
        - "traefik.frontend.rule=Host:prometheus.localhost"
@@ -63,6 +58,9 @@ services:
       placement:
         constraints:
         - node.role==manager
+      restart_policy:
+        condition: on-failure
+  
   grafana:
     image: grafana/grafana
     depends_on:
@@ -75,15 +73,16 @@ services:
     networks:
       - inbound
     user: "104"
-    restart: always
     deploy:
-     labels:
-      - "traefik.port=3000"
-      - "traefik.docker.network=inbound"
-      -  "traefik.frontend.rule=Host:grafana.localhost"
-     placement:
+      labels:
+        - "traefik.port=3000"
+        - "traefik.docker.network=inbound"
+        -  "traefik.frontend.rule=Host:grafana.localhost"
+      placement:
         constraints:
           - node.role == manager
+      restart_policy:
+        condition: on-failure
 
 networks:
   traefik:
@@ -92,9 +91,6 @@ networks:
   inbound:
     driver: overlay
     name: inbound
-  prometheus:
-    driver: overlay
-    name: prometheus
 
 volumes:
     prometheus_data: {}
