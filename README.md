@@ -72,15 +72,22 @@ Verify all the services have been provisioned. The Replica count for each servic
     docker service ls
     
 ## Check the Metrics
-Once all the services are up we can open the Traefik Dashboard
+Once all the services are up we can open the Traefik Dashboard. The dashboard should show us our frontend and backends configured for both Grafana and Prometheus.
 
     http://localhost:8080
 
-The dashboard should show us our frontend and backends configured for both Grafana and Prometheus.
 
-Take a look at the Traefik metrics
+Take a look at the metrics which Traefik is now producing in Prometheus metrics format
 
     http://localhost:8080/metrics
 
 
 ## Login to Grafana and Visualize Metrics
+Grafana is an Open Source visualization tool for the metrics collected with Prometheus. Next, open Grafana to view the Traefik Dashboards.
+**Note: Firefox doesn't properly work with the below URLS**
+
+    http://grafana.localhost
+
+Username: admin
+Password: foobar
+
