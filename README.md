@@ -91,3 +91,17 @@ Grafana is an Open Source visualization tool for the metrics collected with Prom
 Username: admin
 Password: foobar
 
+Open the Traefik Dashboard and select the different backends available
+
+## Deploy a new webservice
+Of course we couldn't do a demo without showing some Cat Gifs. This demo launches a random cat picture of the day served by three instances of the Cats Services.
+
+    docker stack deploy -c cats.yml cats
+
+Let's have a look at our new service
+
+    http://cats.local
+
+Refresh a few times and notice the Traefik Proxy is loadbalancing our requests to the 3 different Cat services.
+
+Now, head back to Grafana. Refresh the Traefik dashboard in the upper right corner and set 5 minutes for our time range. Select, the Cats backend in the Dashboard.
