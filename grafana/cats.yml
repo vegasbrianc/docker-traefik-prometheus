@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  cat-app:
+    image: mikesir87/cats
+    networks:
+      - inbound
+    deploy:
+      mode: replicated
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      labels:
+       - "traefik.frontend.rule=Host:cats.localhost"
+       - "traefik.backend=cats"
+       - "traefik.port=5000"
+       - "traefik.docker.network=inbound"
+networks:
+  inbound:
+   external: true
