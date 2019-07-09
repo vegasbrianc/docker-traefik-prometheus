@@ -88,7 +88,7 @@ Take a look at the metrics which Traefik is now producing in Prometheus metrics 
 
 ## Login to Grafana and Visualize Metrics
 Grafana is an Open Source visualization tool for the metrics collected with Prometheus. Next, open Grafana to view the Traefik Dashboards.
-**Note: Firefox doesn't properly work with the below URLS**
+**Note: Firefox doesn't properly work with the below URLS please use Chrome**
 
     http://grafana.localhost
 
@@ -96,6 +96,8 @@ Username: admin
 Password: foobar
 
 Open the Traefik Dashboard and select the different backends available
+
+**Note: Upper right-hand corner of Grafana switch the default 1 hour time range down to 5 minutes. Refresh a couple times and you should see data start flowing**
 
 ## Deploy a new webservice
 Of course we couldn't do a demo without showing some Cat Gifs. This demo launches a random cat picture of the day served by three instances of the Cats Services.

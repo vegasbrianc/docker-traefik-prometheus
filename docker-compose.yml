@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   traefik:
-    image: traefik:v1.7-alpine
+    image: traefik:v1.7.12-alpine
     command:
       - "--logLevel=DEBUG"
       - "--api"
