@@ -55,6 +55,7 @@ Grafana and Prometheus are being deployed by Docker Swarm and the networking is 
       -  "traefik.frontend.rule=Host:grafana.localhost"
 
 **Prometheus Deployment**
+
     deploy:
       labels:
        - "traefik.frontend.rule=Host:prometheus.localhost"
