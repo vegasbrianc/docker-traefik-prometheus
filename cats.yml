@@ -12,10 +12,12 @@ services:
         parallelism: 1
         delay: 10s
       labels:
-       - "traefik.frontend.rule=Host:cats.localhost"
-       - "traefik.backend=cats"
-       - "traefik.port=5000"
-       - "traefik.docker.network=inbound"
+        - "traefik.http.routers.cat-app.rule=Host(`cats.localhost`)"
+        - "traefik.http.routers.cat-app.service=cat-app"
+        - "traefik.http.services.cat-app.loadbalancer.server.port=5000"
+        - "traefik.docker.network=inbound"
+        - "traefik.http.routers.cat-app.middlewares=cat-app@docker"
+        - "traefik.http.middlewares.cat-app.ratelimit.average=1"
 networks:
   inbound:
    external: true
