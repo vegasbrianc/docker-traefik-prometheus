@@ -1,6 +1,6 @@
 # Monitor Traefik with Prometheus
 
-This Repo helps you get started with monitoring [Traefik](https://traefik.io/) the amazing Reverse Proxy + so much more. Along with Traefik we will provision Prometheus for Time Series Data collection and Grafana for Visualization. Traefik will also act as a proxy in front of Promethues and Grafana while Prometheus monitors Traefik the other way. Cool, huh?
+This Repo helps you get started with monitoring [Traefik v2.0](https://traefik.io/)the amazing Reverse Proxy + so much more. Along with Traefik we will provision Prometheus for Time Series Data collection and Grafana for Visualization. Traefik will also act as a proxy in front of Promethues and Grafana while Prometheus monitors Traefik the other way. Cool, huh?
 
 Before we can begin ensure you have Docker installed with Docker Swarm enabled. If you are using Docker for Desktop Mac or Windows you already have Swarm enabled. For all others please follow the [Swarm setup guide](https://docs.docker.com/engine/swarm/swarm-mode/).
 
@@ -33,7 +33,7 @@ The Traefik metrics are enabled by the command we pass to the Traefik container.
 
     services:
     traefik:
-        image: traefik:v1.7-alpine
+        image: traefik:v2.0
         command:
         - "--logLevel=DEBUG"
         - "--api"
@@ -79,7 +79,7 @@ Verify all the services have been provisioned. The Replica count for each servic
 ## Check the Metrics
 Once all the services are up we can open the Traefik Dashboard. The dashboard should show us our frontend and backends configured for both Grafana and Prometheus.
 
-    http://localhost:8080
+    http://docker.localhost:8080/
 
 
 Take a look at the metrics which Traefik is now producing in Prometheus metrics format
@@ -107,7 +107,7 @@ Of course we couldn't do a demo without showing some Cat Gifs. This demo launche
 
 Let's have a look at our new service
 
-    http://cats.local
+    http://cats.localhost
 
 Refresh a few times and notice the Traefik Proxy is loadbalancing our requests to the 3 different Cat services.
 
