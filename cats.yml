@@ -16,8 +16,8 @@ services:
         - "traefik.http.routers.cat-app.service=cat-app"
         - "traefik.http.services.cat-app.loadbalancer.server.port=5000"
         - "traefik.docker.network=inbound"
-        - "traefik.http.routers.cat-app.middlewares=cat-app@docker"
-# Remove the line below to enable rate limiting. This will only allow avergae 1 request per second before erroring.
+        # Remove the line below to enable rate limiting. This will only allow avergae 1 request per second before erroring.
+      #  - "traefik.http.routers.cat-app.middlewares=cat-app@docker"
       #  - "traefik.http.middlewares.cat-app.ratelimit.average=1"
 networks:
   inbound:
