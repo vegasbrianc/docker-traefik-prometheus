@@ -112,3 +112,8 @@ Let's have a look at our new service
 Refresh a few times and notice the Traefik Proxy is loadbalancing our requests to the 3 different Cat services.
 
 Now, head back to Grafana. Refresh the Traefik dashboard in the upper right corner and set 5 minutes for our time range. Select, the Cats backend in the Dashboard.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
