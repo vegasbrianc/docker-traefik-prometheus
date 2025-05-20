@@ -36,13 +36,15 @@ The Traefik metrics are enabled by the command we pass to the Traefik container.
         image: traefik:v2.0
         command:
         - "--logLevel=DEBUG"
-        - "--api"
+        - "--api.insecure=true"
         - "--metrics"
         - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
         - "--docker"
         - "--docker.swarmMode"
         - "--docker.domain=docker.localhost"
         - "--docker.watch"
+
+**Note**: Enabling the dashboard with `--api.insecure=true` exposes it without authentication. Only use this flag in test environments.
 
 Grafana and Prometheus are being deployed by Docker Swarm and the networking is managed by Traefik. We use labels for the services deployed to inform Traefik how to setup the frontend and backend for each service.
 
