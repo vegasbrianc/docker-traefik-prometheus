@@ -1,0 +1,7 @@
+# Ignore temporary files
+*.swp
+*.tmp
+
+# Docker volume directories
+prometheus_data/
+grafana_data/
