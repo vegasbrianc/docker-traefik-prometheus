@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   traefik:
-    image: traefik:v2.0.4
+    image: traefik:v3.4
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
@@ -38,7 +38,7 @@ services:
       restart_policy:
         condition: on-failure
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v3.4
     volumes:
       - ./prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
@@ -62,7 +62,7 @@ services:
         condition: on-failure
   
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:12.0
     depends_on:
       - prometheus
     volumes:

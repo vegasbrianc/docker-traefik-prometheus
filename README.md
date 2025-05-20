@@ -1,6 +1,8 @@
 # Monitor Traefik with Prometheus
 
-This Repo helps you get started with monitoring [Traefik v2.0](https://traefik.io/)the amazing Reverse Proxy + so much more. Along with Traefik we will provision Prometheus for Time Series Data collection and Grafana for Visualization. Traefik will also act as a proxy in front of Prometheus and Grafana while Prometheus monitors Traefik the other way. Cool, huh?
+This Repo helps you get started with monitoring [Traefik v3.4](https://traefik.io/) the amazing Reverse Proxy + so much more. Along with Traefik we will provision Prometheus for Time Series Data collection and Grafana for Visualization. Traefik will also act as a proxy in front of Prometheus and Grafana while Prometheus monitors Traefik the other way. Cool, huh?
+
+This stack pins **Traefik 3.4**, **Prometheus 3.4**, and **Grafana 12.0** for consistency.
 
 Before we can begin ensure you have Docker installed with Docker Swarm enabled. If you are using Docker for Desktop Mac or Windows you already have Swarm enabled. For all others please follow the [Swarm setup guide](https://docs.docker.com/engine/swarm/swarm-mode/).
 
@@ -33,35 +35,36 @@ The Traefik metrics are enabled by the command we pass to the Traefik container.
 
     services:
     traefik:
-        image: traefik:v2.0
+        image: traefik:v3.4
         command:
-        - "--logLevel=DEBUG"
+        - "--log.level=DEBUG"
         - "--api.insecure=true"
-        - "--metrics"
+        - "--metrics.prometheus=true"
         - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-        - "--docker"
-        - "--docker.swarmMode"
-        - "--docker.domain=docker.localhost"
-        - "--docker.watch"
+        - "--providers.docker=true"
+        - "--providers.docker.swarmmode=true"
+        - "--providers.docker.watch"
 
 **Note**: Enabling the dashboard with `--api.insecure=true` exposes it without authentication. Only use this flag in test environments.
 
 Grafana and Prometheus are being deployed by Docker Swarm and the networking is managed by Traefik. We use labels for the services deployed to inform Traefik how to setup the frontend and backend for each service.
 
-**Grafana Deployment**
+ **Grafana Deployment**
 
     deploy:
      labels:
-      - "traefik.port=3000"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.routers.grafana.service=grafana"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "traefik.docker.network=inbound"
-      -  "traefik.frontend.rule=Host:grafana.localhost"
 
-**Prometheus Deployment**
+ **Prometheus Deployment**
 
     deploy:
       labels:
-       - "traefik.frontend.rule=Host:prometheus.localhost"
-       - "traefik.port=9090"
+       - "traefik.http.routers.prometheus.rule=Host(`prometheus.localhost`)"
+       - "traefik.http.routers.prometheus.service=prometheus"
+       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
        - "traefik.docker.network=inbound"
 
 Prometheus is also configured to monitor Traefik. This is configured in [Prometheus.yml](https://github.com/vegasbrianc/docker-traefik-prometheus/blob/master/prometheus/prometheus.yml#L40) which enables Prometheus to auto-discover Traefik inside of Docker Swarm. Prometheus is watching for the Service Task `tasks.traefik` on port 8080. Once the service is online metrics will begin flowing to Prometheus.
